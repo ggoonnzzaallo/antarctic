@@ -1,5 +1,10 @@
 #include <Servo.h>
 
+// This is code to control a quadruped robot.
+// The left servos are mirrored with respect to the right servos.
+// An angle of 0 for the hip servos on the right is equivalent to an agel of 180 for the servos on the left. The range for all servos is 0 to 180. 0 on the right is equivalent to 180 on the left (flat)
+// An angel of 90 for the servo knee on the right is the same as the servo knee on the left, but 100 on the right is equivalent to 80 on the left.
+
 Servo FLKnee;  // Create servo objects
 Servo FLHip;
 Servo FLShoulder;
@@ -17,6 +22,7 @@ bool isRunning = true;
 
 void moveLegs(Servo& hipRight, Servo& kneeRight, Servo& hipLeft, Servo& kneeLeft) {
     // Phase 1: Lift legs
+    // In this phase the leg moves all the way forward.
     hipRight.write(90);
     kneeRight.write(150);
     hipLeft.write(90);
@@ -24,6 +30,7 @@ void moveLegs(Servo& hipRight, Servo& kneeRight, Servo& hipLeft, Servo& kneeLeft
     delay(300);
     
     // Phase 2: Plant forward
+    // In this phase the leg goes all the way back to push forward
     hipRight.write(40);
     kneeRight.write(70);
     hipLeft.write(140);    // Mirrored angle
@@ -31,6 +38,7 @@ void moveLegs(Servo& hipRight, Servo& kneeRight, Servo& hipLeft, Servo& kneeLeft
     delay(300);
     
     // Phase 3: Push back
+    // I this phase the leg is in the air to create clearace
     hipRight.write(35);
     kneeRight.write(130);
     hipLeft.write(145);    // Mirrored angle
@@ -38,6 +46,7 @@ void moveLegs(Servo& hipRight, Servo& kneeRight, Servo& hipLeft, Servo& kneeLeft
     delay(200);
     
     // Phase 4: Return to stance
+    // In this phase the leg is in its standing position
     hipRight.write(70);
     kneeRight.write(130);
     hipLeft.write(110);
