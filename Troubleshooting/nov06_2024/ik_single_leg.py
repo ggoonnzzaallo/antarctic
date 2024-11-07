@@ -3,15 +3,14 @@ import math
 ###INSTRUCTIONS###
 #We want to go from X, Y, Z coordinates and solve for the servo angels
 #We will begin with the rear-right leg
-
 #X-axis is Front-Back
 #Y-axis is Left-Right
 #Z-axis is Top-Bottom
 
 #Defining our inputs:
-Input_X = 39.8 #in mm
+Input_X = 100 #in mm
 Input_Y = 48.55 #in mm
-Input_Z = 170 #in mm
+Input_Z = 250 #in mm
 
 #Defining our system constants:
 Shoulder_to_foot = 48.55 #in mm
@@ -34,7 +33,8 @@ var_D = math.sqrt((Input_Y**2 + Input_Z**2)-Shoulder_to_foot**2)
 print("Variable D is: (mm)", var_D)
 var_omega = (math.atan(Input_Y/Input_Z) + (math.atan(var_D/Shoulder_to_foot)))
 print("Variable Omega is: (rad)", var_omega)
-print("Variable Omega is: (deg)", var_omega*180/math.pi) #<- ATTENTION: This is the input for the shoulder servo
+print("Variable Omega is: (deg)", var_omega*180/math.pi) 
+servo_shoulder_deg = var_omega*180/math.pi #<- ATTENTION: This is the input for the shoulder servo
 
 #X-Z Plane IK
 var_G = math.sqrt(var_D**2 + Input_X**2)
@@ -44,7 +44,9 @@ print("Variable Phi is: (rad)", var_Phi)
 print("Variable Phi is: (deg)", var_Phi*180/math.pi)
 var_Theta = math.atan(Input_X/var_D) + math.asin((Leg_lower*math.sin(var_Phi))/var_G)
 print("Variable Theta is: (rad)", var_Theta)
-print("Variable Theta is: (deg)", var_Theta*180/math.pi) #<- ATTENTION: This is the input for the hip servo
+print("Variable Theta is: (deg)", var_Theta*180/math.pi) 
+servo_hip_deg = 90 - var_Theta*180/math.pi #<- ATTENTION: This is the input for the hip servo, right
+servo_hip_deg = 90 + var_Theta*180/math.pi #<- ATTENTION: This is the input for the hip servo, left
 
 #4-bar linkage, knee
 link_knee_X = Leg_upper*math.sin(var_Theta)
@@ -75,12 +77,19 @@ print("Link servo Theta is: (rad)", link_servo_Theta)
 print("Link servo Theta is: (deg)", link_servo_Theta*180/math.pi)
 link_servo_Alpha = link_servo_Theta+(math.pi)-(link_knee_Theta2+((crank_angle*math.pi)/(180)))
 print("Link servo Alpha is: (rad)", link_servo_Alpha)
-link_servo_L =math.sqrt((link_servo_L4**2)+(link_servo_L1**2)-(2*link_servo_L1*link_servo_L4*math.cos(link_servo_Alpha)))
+link_servo_L = math.sqrt((link_servo_L4**2)+(link_servo_L1**2)-(2*link_servo_L1*link_servo_L4*math.cos(link_servo_Alpha)))
 print("Link servo L is: (mm)", link_servo_L)
-link_servo_Beta = math.asin((math.sin(link_servo_Alpha)*link_servo_L4)/link_servo_L)
+link_servo_Beta = math.acos(((link_servo_L**2)+(link_servo_L1**2)-(link_servo_L4**2))/(2*link_servo_L1*link_servo_L))
 print("Link servo Beta is: (rad)", link_servo_Beta)
+print("Link servo Beta is: (deg)", link_servo_Beta*180/math.pi)
 link_servo_Lambda = math.acos((link_servo_L2**2-link_servo_L3**2+link_servo_L**2)/(2*link_servo_L*link_servo_L2))
 print("Link servo Lambda is: (rad)", link_servo_Lambda)
 link_servo_Theta2 = link_servo_Theta+link_servo_Beta+link_servo_Lambda
 print("Link servo Theta2 is: (rad)", link_servo_Theta2)
-print("Link servo Theta2 is: (deg)", link_servo_Theta2*180/math.pi) #<- ATTENTION: This is the input for the knee servo
+print("Link servo Theta2 is: (deg)", link_servo_Theta2*180/math.pi) 
+servo_knee_deg = link_servo_Theta2*180/math.pi - 90 #<- ATTENTION: This is the input for the knee servo, right
+servo_knee_deg = 270 - link_servo_Theta2*180/math.pi  #<- ATTENTION: This is the input for the knee servo, left
+
+print(f"Servo angles - Shoulder: {int(servo_shoulder_deg)}°, Hip: {int(servo_hip_deg)}°, Knee: {int(servo_knee_deg)}°")
+
+
