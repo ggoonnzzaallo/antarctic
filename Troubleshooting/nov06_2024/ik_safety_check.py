@@ -70,19 +70,54 @@ def calculate_leg_angles(Input_X: float, Input_Y: float, Input_Z: float, side: s
 
     return servo_shoulder_deg, servo_hip_deg, servo_knee_deg
 
+def check_servo_angles(hip_angle: float, knee_angle: float, shoulder_angle: float) -> tuple[bool, str]:
+    # Check basic angle ranges (0-180)
+    if not (0 <= hip_angle <= 180 and 0 <= knee_angle <= 180 and 0 <= shoulder_angle <= 180):
+        return False, "Angles must be between 0-180°"
+        
+    # Define safe ranges (hip angle: [min knee, max knee])
+    safe_ranges = {
+        0: [40, 140], 5: [40, 155], 10: [40, 150], 15: [20, 165], 
+        20: [20, 165], 25: [20, 165], 30: [40, 165], 35: [60, 165],
+        40: [60, 165], 45: [70, 165], 50: [80, 160], 55: [80, 160],
+        60: [90, 165], 65: [90, 165], 70: [100, 160], 75: [110, 160],
+        80: [110, 160], 85: [120, 160], 90: [125, 160], 95: [135, 160],
+        100: [140, 160], 105: [145, 160], 110: [145, 160], 115: [160, 165],
+        120: [165, 165], 125: [165, 165]
+    }
+    
+    hip_rounded = round(hip_angle / 5) * 5
+    hip_rounded = min(max(0, hip_rounded), 125)
+    
+    min_knee, max_knee = safe_ranges[hip_rounded]
+    if not (min_knee <= knee_angle <= max_knee):
+        return False, "Knee angle unsafe for given hip position"
+        
+    return True, "Safe"
+
 # Example usage
 if __name__ == "__main__":
-    angles = calculate_leg_angles(-15+60, 48.55, 100-40, 'Right') #X, Y, Z
-    print(f"Servo angles - Shoulder: {int(angles[0])}°, Hip: {int(angles[1])}°, Knee: {int(angles[2])}°")
+    # Define square parameters
+    start_point = [20, 48.55, 150]  # Starting corner [X, Y, Z]
+    square_base = 100  # X-axis length
+    square_height = 0  # Z-axis length
+    side = 'Right'
+    
+    square_points = [
+        start_point,
+        [start_point[0] + square_base, start_point[1], start_point[2]],
+        [start_point[0] + square_base, start_point[1], start_point[2] + square_height],
+        [start_point[0], start_point[1], start_point[2] + square_height]
+    ]
+    
+    for point in square_points:
+        angles = calculate_leg_angles(*point, side)
+        is_safe, message = check_servo_angles(angles[1], angles[2], angles[0])
+        print(f"Coords {point} -> Angles [S:{int(angles[0])}°, H:{int(angles[1])}°, K:{int(angles[2])}°] {'✅' if is_safe else f'❌ {message}'}")
 
 
 
+#For the Right side knee servos, higher values move the horn CCW
 
-# --------------------------------------------------
-# Moving to position 4 [X: 50.00, Y: 48.55, Z: 120.00]
-# link_servo_Beta: 2.45
-# link_servo_Theta: 0.61
-# link_servo_Lambda: 1.72
-# Commanding RR servos to:
-# RRShoulder: 89° | RRHip: 0° | RRKnee: 184
-# --------------------------------------------------
+
+

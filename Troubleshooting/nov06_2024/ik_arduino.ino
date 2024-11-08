@@ -1,6 +1,12 @@
 #include <Servo.h>
 #include <math.h>
 
+// System Notes:
+// For the Right side knee servos, higher values move the horn CCW
+// For the Left side knee servos, higher values move the horn CCW
+
+
+
 // Create servo objects
 Servo FLKnee, FLHip, FLShoulder;
 Servo FRKnee, FRHip, FRShoulder;
@@ -37,6 +43,13 @@ void calculateServoAngles(float input_x, float input_y, float input_z, int& shou
     float var_G = sqrt(pow(var_D, 2) + pow(input_x, 2));
     float var_Phi = acos((pow(var_G, 2) - pow(Leg_upper, 2) - pow(Leg_lower, 2))/(-2 * Leg_upper * Leg_lower));
     float var_Theta = atan(input_x/var_D) + asin((Leg_lower * sin(var_Phi))/var_G);
+
+    Serial.print("var_G: ");
+    Serial.println(var_G);
+    Serial.print("var_Phi: ");
+    Serial.println(var_Phi);
+    Serial.print("var_Theta: ");
+    Serial.println(var_Theta);
     
     // Different calculations for left and right sides
     hip_angle = isLeftSide ? (90 + var_Theta * 180/PI) : (90 - var_Theta * 180/PI);
@@ -45,11 +58,24 @@ void calculateServoAngles(float input_x, float input_y, float input_z, int& shou
     float link_knee_X = Leg_upper * sin(var_Theta);
     float link_knee_Y = Leg_upper * cos(var_Theta);
     float link_knee_Theta = atan(link_knee_Y/link_knee_X);
-    float link_knee_Alpha = PI - var_Phi;
+    float link_knee_Alpha = ((360-173.7924732)*PI/180) - var_Phi;
     float link_knee_L = sqrt(pow(link_knee_L1, 2) + pow(link_knee_L4, 2) - 2 * link_knee_L1 * link_knee_L4 * cos(link_knee_Alpha));
     float link_knee_Beta = asin((link_knee_L4 * sin(link_knee_Alpha))/link_knee_L);
     float link_knee_Lambda = acos((pow(link_knee_L3, 2) - pow(link_knee_L2, 2) - pow(link_knee_L, 2))/(-2 * link_knee_L2 * link_knee_L));
     float link_knee_Theta2 = link_knee_Beta + link_knee_Lambda - link_knee_Theta;
+
+    Serial.print("link_knee_Theta: ");
+    Serial.println(link_knee_Theta);
+    Serial.print("link_knee_Alpha: ");
+    Serial.println(link_knee_Alpha);
+    Serial.print("link_knee_L: ");
+    Serial.println(link_knee_L);
+    Serial.print("link_knee_Beta: ");
+    Serial.println(link_knee_Beta);
+    Serial.print("link_knee_Lambda: ");
+    Serial.println(link_knee_Lambda);
+    Serial.print("link_knee_Theta2: ");
+    Serial.println(link_knee_Theta2);
 
     // 4-bar linkage, servo horn
     float link_servo_X = 28.964;
@@ -61,9 +87,21 @@ void calculateServoAngles(float input_x, float input_y, float input_z, int& shou
     float link_servo_Lambda = acos((pow(link_servo_L2, 2) - pow(link_servo_L3, 2) + pow(link_servo_L, 2))/(2 * link_servo_L * link_servo_L2));
     float link_servo_Theta2 = link_servo_Theta + link_servo_Beta + link_servo_Lambda;
     
+    Serial.print("link_servo_L: ");
+    Serial.println(link_servo_L);
+    Serial.print("link_servo_Alpha: ");
+    Serial.println(link_servo_Alpha);
+    Serial.print("link_servo_Beta: ");
+    Serial.println(link_servo_Beta);
+    Serial.print("link_servo_Theta: ");
+    Serial.println(link_servo_Theta);
+    Serial.print("link_servo_Lambda: ");
+    Serial.println(link_servo_Lambda);
+    
     // Different calculations for left and right sides
-    knee_angle = isLeftSide ? (270 - link_servo_Theta2 * 180/PI) : (link_servo_Theta2 * 180/PI - 90);
+    knee_angle = isLeftSide ? (link_servo_Theta2 * 180/PI - 90) : (270 - link_servo_Theta2 * 180/PI);
 }
+
 
 void setup() {
     Serial.begin(9600);
@@ -92,6 +130,15 @@ void setup() {
     FRShoulder.write(90);
     FLShoulder.write(90);
 
+    RRHip.write(70);
+    RRKnee.write(130);
+    FRHip.write(70);
+    FRKnee.write(130);
+    RLHip.write(110);
+    RLKnee.write(50);
+    FLHip.write(110);
+    FLKnee.write(50);
+
     // Calculate and set initial positions
     int shoulder_angle, hip_angle, knee_angle;
     
@@ -116,10 +163,10 @@ void setup() {
 
 // Define positions array [X, Y, Z]
 const float positions[][4] = {
-    {-10, 48.55, 180},  // Position 1
-    {-5, 48.55, 180},  // Position 2
-    {25, 48.55, 180},    // Position 3
-    {100, 48.55,180}
+    {-10, 48.55, 120},  // Position 1
+    {50, 48.55, 120},  // Position 2
+    {50, 48.55, 140},    // Position 3
+    {-10, 48.55,140}
 };
 const int NUM_POSITIONS = 4;
 const int POSITION_DELAY = 500; // Delay between positions in ms
@@ -166,4 +213,5 @@ void loop() {
     currentPosition = (currentPosition + 1) % NUM_POSITIONS;
     delay(POSITION_DELAY);
 }
+
 

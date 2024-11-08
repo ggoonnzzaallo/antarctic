@@ -8,14 +8,14 @@ import math
 #Z-axis is Top-Bottom
 
 #Defining our inputs:
-Input_X = 100 #in mm
+Input_X = 50 #in mm
 Input_Y = 48.55 #in mm
-Input_Z = 250 #in mm
+Input_Z = 120 #in mm
 
 #Defining our system constants:
 Shoulder_to_foot = 48.55 #in mm
 Leg_upper = 130 #in mm
-Leg_lower = 143.82672 #in mm
+Leg_lower = 143.82672 #in mm 
 
 link_knee_L1 = 130 #in mm
 link_knee_L2 = 42.98015 #in mm
@@ -46,7 +46,7 @@ var_Theta = math.atan(Input_X/var_D) + math.asin((Leg_lower*math.sin(var_Phi))/v
 print("Variable Theta is: (rad)", var_Theta)
 print("Variable Theta is: (deg)", var_Theta*180/math.pi) 
 servo_hip_deg = 90 - var_Theta*180/math.pi #<- ATTENTION: This is the input for the hip servo, right
-servo_hip_deg = 90 + var_Theta*180/math.pi #<- ATTENTION: This is the input for the hip servo, left
+#servo_hip_deg = 90 + var_Theta*180/math.pi #<- ATTENTION: This is the input for the hip servo, left
 
 #4-bar linkage, knee
 link_knee_X = Leg_upper*math.sin(var_Theta)
@@ -56,7 +56,7 @@ print("Link knee Y is: (mm)", link_knee_Y)
 link_knee_Theta = math.atan(link_knee_Y/link_knee_X)
 print("Link knee Theta is: (rad)", link_knee_Theta)
 print("Link knee Theta is: (deg)", link_knee_Theta*180/math.pi)
-link_knee_Alpha = math.pi - var_Phi
+link_knee_Alpha = ((360-173.7924732)*math.pi/180) - var_Phi
 print("Link knee Alpha is: (rad)", link_knee_Alpha)
 print("Link knee Alpha is: (deg)", link_knee_Alpha*180/math.pi)
 link_knee_L = math.sqrt((link_knee_L1**2)+(link_knee_L4**2)-(2*link_knee_L1*link_knee_L4*math.cos(link_knee_Alpha)))
@@ -87,9 +87,32 @@ print("Link servo Lambda is: (rad)", link_servo_Lambda)
 link_servo_Theta2 = link_servo_Theta+link_servo_Beta+link_servo_Lambda
 print("Link servo Theta2 is: (rad)", link_servo_Theta2)
 print("Link servo Theta2 is: (deg)", link_servo_Theta2*180/math.pi) 
-servo_knee_deg = link_servo_Theta2*180/math.pi - 90 #<- ATTENTION: This is the input for the knee servo, right
-servo_knee_deg = 270 - link_servo_Theta2*180/math.pi  #<- ATTENTION: This is the input for the knee servo, left
+servo_knee_deg = 270 - (link_servo_Theta2*180/math.pi) #<- ATTENTION: This is the input for the knee servo, right
+#servo_knee_deg = link_servo_Theta2*180/math.pi -90 #<- ATTENTION: This is the input for the knee servo, left
 
 print(f"Servo angles - Shoulder: {int(servo_shoulder_deg)}°, Hip: {int(servo_hip_deg)}°, Knee: {int(servo_knee_deg)}°")
 
 
+
+# # ---------------------------------------------------
+# Moving to position 2 [X: 50.00, Y: 48.55, Z: 120.00]
+# var_D: 120.00
+# var_omega: 1.57
+# var_G: 130.00
+# var_Phi: 0.98
+# var_Theta: 1.57
+# link_knee_Theta: 0.00
+# link_knee_Alpha: 2.27
+# link_knee_L: 156.29
+# link_knee_Beta: 0.18
+# link_knee_Lambda: 0.80
+# link_knee_Theta2: 0.98
+# link_servo_L: 37.17
+# link_servo_Alpha: 0.97
+# link_servo_Beta: 1.27
+# link_servo_Theta: 0.61
+# link_servo_Lambda: 1.09
+
+
+#Left knee 80 degrees, moving CCW
+#Right knee is 99 degrees, moving CCW
