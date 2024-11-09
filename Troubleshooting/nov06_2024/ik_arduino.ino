@@ -100,6 +100,9 @@ void calculateServoAngles(float input_x, float input_y, float input_z, int& shou
     
     // Different calculations for left and right sides
     knee_angle = isLeftSide ? (link_servo_Theta2 * 180/PI - 90) : (270 - link_servo_Theta2 * 180/PI);
+
+
+    
 }
 
 
@@ -144,34 +147,34 @@ void setup() {
     
     // Calculate for left legs
     calculateServoAngles(Input_X, Input_Y, Input_Z, shoulder_angle, hip_angle, knee_angle, true);
-    RLShoulder.write(shoulder_angle);
-    RLHip.write(hip_angle);
-    RLKnee.write(knee_angle);
-    FLShoulder.write(shoulder_angle);
-    FLHip.write(hip_angle);
-    FLKnee.write(knee_angle);
+    // RLShoulder.write(shoulder_angle);
+    // RLHip.write(hip_angle);
+    // RLKnee.write(knee_angle);
+    // FLShoulder.write(shoulder_angle);
+    // FLHip.write(hip_angle);
+    // FLKnee.write(knee_angle);
 
     // Calculate for right legs
     calculateServoAngles(Input_X, Input_Y, Input_Z, shoulder_angle, hip_angle, knee_angle, false);
-    RRShoulder.write(shoulder_angle);
-    RRHip.write(hip_angle);
-    RRKnee.write(knee_angle);
-    FRShoulder.write(shoulder_angle);
-    FRHip.write(hip_angle);
-    FRKnee.write(knee_angle);
+    // RRShoulder.write(shoulder_angle);
+    // RRHip.write(hip_angle);
+    // RRKnee.write(knee_angle);
+    // FRShoulder.write(shoulder_angle);
+    // FRHip.write(hip_angle);
+    // FRKnee.write(knee_angle);
 }
 
 // Define positions array [X, Y, Z]
 const float positions[][4] = {
-    {-10, 48.55, 120},  // Position 1
-    {50, 48.55, 120},  // Position 2
-    {50, 48.55, 140},    // Position 3
-    {-10, 48.55,140}
+      {-60, 48.55, 170},  // Position 4
+      {-60, 48.55,220}, // Position 3
+      {0, 48.55, 220},    // Position 2
+      {0, 48.55, 170}  // Position 1
 };
 const int NUM_POSITIONS = 4;
-const int POSITION_DELAY = 500; // Delay between positions in ms
+const int POSITION_DELAY = 100; // Delay between positions in ms
 
-int currentPosition = 0;
+int currentPosition = 1;
 
 void loop() {
     int shoulder_angle, hip_angle, knee_angle;
@@ -194,7 +197,7 @@ void loop() {
         shoulder_angle, 
         hip_angle, 
         knee_angle, 
-        false
+        true
     );
 
     Serial.println("Commanding RR servos to:");
@@ -206,9 +209,9 @@ void loop() {
     Serial.println(knee_angle);
     Serial.println("--------------------------------------------------");
 
-    FRShoulder.write(shoulder_angle);
-    FRHip.write(hip_angle);
-    FRKnee.write(knee_angle);
+    FLShoulder.write(shoulder_angle);
+    FLHip.write(hip_angle);
+    FLKnee.write(knee_angle);
 
     currentPosition = (currentPosition + 1) % NUM_POSITIONS;
     delay(POSITION_DELAY);

@@ -68,6 +68,9 @@ def calculate_leg_angles(Input_X: float, Input_Y: float, Input_Z: float, side: s
         servo_knee_deg = 270 - (link_servo_Theta2*180/math.pi)
         servo_shoulder_deg = var_omega*180/math.pi
 
+
+
+
     return servo_shoulder_deg, servo_hip_deg, servo_knee_deg
 
 def check_servo_angles(hip_angle: float, knee_angle: float, shoulder_angle: float) -> tuple[bool, str]:
@@ -98,9 +101,9 @@ def check_servo_angles(hip_angle: float, knee_angle: float, shoulder_angle: floa
 # Example usage
 if __name__ == "__main__":
     # Define square parameters
-    start_point = [20, 48.55, 150]  # Starting corner [X, Y, Z]
-    square_base = 100  # X-axis length
-    square_height = 0  # Z-axis length
+    start_point = [-60, 48.55, 170]  # Starting corner [X, Y, Z]
+    square_base = 60  # X-axis length
+    square_height = 50  # Z-axis length
     side = 'Right'
     
     square_points = [
