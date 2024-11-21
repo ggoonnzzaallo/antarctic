@@ -67,15 +67,15 @@ const float legPositions[4][3] = {
 };
 
 const float frontLegSteps[3][3] = {
-    {20, 70, 200},  // Ground position
-    {-10, 70, 180}, // Lift position
-    {-40, 70, 200}    // Forward position
+    {20, 70, 200},  // Position 1, Ground position
+    {-10, 70, 180}, // Position 2, Lift position
+    {-40, 70, 200}    // Position 3, Forward position
 };
 
 const float rearLegSteps[3][3] = {
-    {120, 70, 200},   // Ground position
-    {90, 70, 180},  // Lift position
-    {60, 70, 200}   // Forward position
+    {120, 70, 200},   // Position 1, Ground position
+    {90, 70, 180},  // Position 2, Lift position
+    {60, 70, 200}   // Position 3, Forward position
 };
 
 
@@ -178,20 +178,28 @@ void setup() {
 }
 
 void loop() {
-    // Walking gait sequence: FL -> RR -> FR -> RL
-    static int currentStep = 0;
-    static int legIndex = 0;
+    static int diag1Step = 0;  // FL+RR pair
+    static int diag2Step = 2;  // FR+RL pair, starts at position 2
     
-    Leg* currentLeg = legs[legIndex];
-    const float* positions = currentLeg->isFront ? frontLegSteps[currentStep] : rearLegSteps[currentStep];
+    Serial.print("Diag1(FL+RR): "); Serial.print(diag1Step);
+    Serial.print(" | Diag2(FR+RL): "); Serial.println(diag2Step);
     
-    moveLeg(*currentLeg, positions);
-    delay(100);  // Adjust this timing for different walking speeds
+    // Move diagonal pair 1 (FL + RR)
+    moveLeg(*legs[0], frontLegSteps[diag1Step]);  // FL
+    moveLeg(*legs[3], rearLegSteps[diag1Step]);   // RR
     
-    currentStep = (currentStep + 1) % 3;
-    if(currentStep == 0) {
-        legIndex = (legIndex + 1) % 4;
-    }
+    // Move diagonal pair 2 (FR + RL)
+    moveLeg(*legs[1], frontLegSteps[diag2Step]);  // FR
+    moveLeg(*legs[2], rearLegSteps[diag2Step]);   // RL
+    
+    delay(1000);
+    
+    // Explicit step transitions
+    if (diag1Step == 2) diag1Step = 0;
+    else diag1Step++;
+    
+    if (diag2Step == 2) diag2Step = 0;
+    else diag2Step++;
 }
 
 void moveLeg(Leg& leg, float* position) {
@@ -202,5 +210,6 @@ void moveLeg(Leg& leg, float* position) {
     leg.shoulder.write(shoulder_angle + leg.trim.shoulder);
     leg.hip.write(hip_angle + leg.trim.hip);
     leg.knee.write(knee_angle + leg.trim.knee);
+    leg.currentPosition = position[0]; // Track X position or whatever you prefer
 }
 

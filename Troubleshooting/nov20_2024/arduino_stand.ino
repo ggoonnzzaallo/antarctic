@@ -181,3 +181,4 @@ void moveLeg(Leg& leg, float* position) {
     leg.knee.write(knee_angle + leg.trim.knee);
 }
 
+
