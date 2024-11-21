@@ -48,11 +48,17 @@ Leg* legs[4] = {&FL, &RR, &FR, &RL};
 
 const float positions[][3] = {
     {0, 48.55, 220},     // Position 1, back and grounded
-    {0, 48.55, 170},     // Position 2, back and lifted
-    {-60, 48.55, 170},    // Position 3, front and lifted
-    {-60, 48.55, 220}   // Position 4, front and grounded
+    {0, 48.55, 220},     // Position 2, back and lifted
+    {0, 48.55, 220},    // Position 3, front and lifted
+    {0, 48.55, 220}   // Position 4, front and grounded
 
 };
+
+
+    // {0, 48.55, 220},     // Position 1, back and grounded
+    // {0, 48.55, 170},     // Position 2, back and lifted
+    // {-60, 48.55, 170},    // Position 3, front and lifted
+    // {-60, 48.55, 220}   // Position 4, front and grounded
 
 void calculateServoAngles(float input_x, float input_y, float input_z, int& shoulder_angle, int& hip_angle, int& knee_angle, bool isLeftSide) {
     // Y-Z Plane IK

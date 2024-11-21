@@ -1,3 +1,4 @@
+
 #include <Servo.h>
 #include <math.h>
 
@@ -30,6 +31,12 @@ const float crank_angle = 102.5719779;  // in degrees
 enum LegState {
     GROUNDED = 0,
     MOVING = 1
+};
+
+enum RobotState {
+    WALKING,
+    SWIMMING,
+    DANCING
 };
 
 struct Leg {
@@ -92,6 +99,102 @@ void calculateServoAngles(float input_x, float input_y, float input_z, int& shou
     knee_angle = isLeftSide ? (link_servo_Theta2 * 180/PI - 90) : (270 - link_servo_Theta2 * 180/PI);
 }
 
+void walkingRoutine() {
+    static int activeleg = 0;  // 0=FL, 1=RR, 2=FR, 3=RL
+
+    Leg* currentLeg = legs[activeleg];
+    
+    if (currentLeg->currentPosition == 3) {
+        // When leg is in air (pos 3), start moving next leg
+        Leg* nextLeg = legs[(activeleg + 1) % 4];
+        if (nextLeg->currentPosition < 2) {
+            moveLeg(*nextLeg, positions[nextLeg->currentPosition]);
+            nextLeg->currentPosition++;
+            return;
+        }
+    }
+    
+    if (currentLeg->currentPosition == 4) {
+        moveLeg(*currentLeg, positions[0]);  // Ground contact movement (4->1)
+        currentLeg->currentPosition = 0;
+        activeleg = (activeleg + 1) % 4;
+    } else if (currentLeg->currentPosition < 4) {
+        moveLeg(*currentLeg, positions[currentLeg->currentPosition]);
+        currentLeg->currentPosition++;
+    }
+    
+    delay(500);
+}
+
+void swimmingRoutine() {
+    static int activeleg = 0;
+    static unsigned long lastTime = 0;
+    static float phase = 0;
+    const float frequency = 0.05;  // Lower = smoother
+    
+    Leg* currentLeg = legs[activeleg];
+    
+    // Smooth sine wave interpolation
+    phase += frequency;
+    if(phase > TWO_PI) phase -= TWO_PI;
+    
+    float shoulderAngle1 = 90 + 22.5 * (sin(phase) + 1);  // FL and RR: 90 to 135
+    float shoulderAngle2 = 90 - 22.5 * (sin(phase) + 1);  // FR and RL: 90 to 45
+    
+    FL.shoulder.write(shoulderAngle1);
+    RR.shoulder.write(shoulderAngle1);
+    FR.shoulder.write(shoulderAngle2);
+    RL.shoulder.write(shoulderAngle2);
+    
+    // Rest of walking logic remains unchanged
+    if (currentLeg->currentPosition == 3) {
+        Leg* nextLeg = legs[(activeleg + 1) % 4];
+        if (nextLeg->currentPosition < 2) {
+            moveLeg(*nextLeg, positions[nextLeg->currentPosition]);
+            nextLeg->currentPosition++;
+            return;
+        }
+    }
+    
+    if (currentLeg->currentPosition == 4) {
+        moveLeg(*currentLeg, positions[0]);
+        currentLeg->currentPosition = 0;
+        activeleg = (activeleg + 1) % 4;
+    } else if (currentLeg->currentPosition < 4) {
+        moveLeg(*currentLeg, positions[currentLeg->currentPosition]);
+        currentLeg->currentPosition++;
+    }
+    
+    delay(20);  // Shorter delay for smoother motion
+}
+
+void dancingRoutine() {
+    static int activeleg = 0;  // 0=FL, 1=RR, 2=FR, 3=RL
+
+    Leg* currentLeg = legs[activeleg];
+    
+    if (currentLeg->currentPosition == 3) {
+        // When leg is in air (pos 3), start moving next leg
+        Leg* nextLeg = legs[(activeleg + 1) % 4];
+        if (nextLeg->currentPosition < 2) {
+            moveLeg(*nextLeg, positions[nextLeg->currentPosition]);
+            nextLeg->currentPosition++;
+            return;
+        }
+    }
+    
+    if (currentLeg->currentPosition == 4) {
+        moveLeg(*currentLeg, positions[0]);  // Ground contact movement (4->1)
+        currentLeg->currentPosition = 0;
+        activeleg = (activeleg + 1) % 4;
+    } else if (currentLeg->currentPosition < 4) {
+        moveLeg(*currentLeg, positions[currentLeg->currentPosition]);
+        currentLeg->currentPosition++;
+    }
+    
+    delay(500);
+}
+
 void setup() {
     Serial.begin(9600);
     delay(1000);
@@ -146,34 +249,35 @@ void setup() {
     }
 }
 
-const int NUM_POSITIONS = 4;
-const int POSITION_DELAY = 500; // Delay between positions in ms
-
 void loop() {
-    static int activeleg = 0;  // 0=FL, 1=RR, 2=FR, 3=RL
-
-    Leg* currentLeg = legs[activeleg];
+    static RobotState currentState = SWIMMING;
+    static unsigned long stateStartTime = millis();
     
-    if (currentLeg->currentPosition == 3) {
-        // When leg is in air (pos 3), start moving next leg
-        Leg* nextLeg = legs[(activeleg + 1) % 4];
-        if (nextLeg->currentPosition < 2) {
-            moveLeg(*nextLeg, positions[nextLeg->currentPosition]);
-            nextLeg->currentPosition++;
-            return;
-        }
+    switch(currentState) {
+        // case WALKING:
+        //     walkingRoutine();
+        //     if(millis() - stateStartTime > 5000) {
+        //         currentState = SWIMMING;
+        //         stateStartTime = millis();
+        //     }
+        //     break;
+            
+        case SWIMMING:
+            swimmingRoutine();
+            if(millis() - stateStartTime > 3000) {
+                currentState = SWIMMING;
+                stateStartTime = millis();
+            }
+            break;
+            
+        // case DANCING:
+        //     dancingRoutine();
+        //     if(millis() - stateStartTime > 4000) {
+        //         currentState = WALKING;
+        //         stateStartTime = millis();
+        //     }
+        //     break;
     }
-    
-    if (currentLeg->currentPosition == 4) {
-        moveLeg(*currentLeg, positions[0]);  // Ground contact movement (4->1)
-        currentLeg->currentPosition = 0;
-        activeleg = (activeleg + 1) % 4;
-    } else if (currentLeg->currentPosition < 4) {
-        moveLeg(*currentLeg, positions[currentLeg->currentPosition]);
-        currentLeg->currentPosition++;
-    }
-    
-    delay(POSITION_DELAY);
 }
 
 void moveLeg(Leg& leg, float* position) {

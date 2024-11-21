@@ -37,28 +37,48 @@ struct Leg {
     int currentPosition;
     LegState state;
     bool isLeft;
+    bool isFront;
 };
 
-Leg FL = {FLShoulder, FLHip, FLKnee, 0, GROUNDED, true};
-Leg RR = {RRShoulder, RRHip, RRKnee, 0, GROUNDED, false};
-Leg FR = {FRShoulder, FRHip, FRKnee, 0, GROUNDED, false};
-Leg RL = {RLShoulder, RLHip, RLKnee, 0, GROUNDED, true};
+Leg FL = {FLShoulder, FLHip, FLKnee, 0, GROUNDED, true, true};
+Leg RR = {RRShoulder, RRHip, RRKnee, 0, GROUNDED, false, false};
+Leg FR = {FRShoulder, FRHip, FRKnee, 0, GROUNDED, false, true};
+Leg RL = {RLShoulder, RLHip, RLKnee, 0, GROUNDED, true, false};
 
-Leg* legs[4] = {&FL, &RR, &FR, &RL};
+Leg* legs[4] = {&FL, &FR, &RL, &RR}; // Front left -> Front right -> Rear left -> Rear right
 
-const float positions[][3] = {
-    {0, 48.55, 220},     // Position 1, back and grounded
-    {0, 48.55, 170},     // Position 2, back and lifted
+const float front_positions[][3] = {
+    {-40, 48.55, 190},     // Position 1, back and grounded
+    {-40, 48.55, 170},     // Position 2, back and lifted
     {-60, 48.55, 170},    // Position 3, front and lifted
-    {-60, 48.55, 220}   // Position 4, front and grounded
-
+    {-60, 48.55, 190}   // Position 4, front and grounded
 };
 
-void calculateServoAngles(float input_x, float input_y, float input_z, int& shoulder_angle, int& hip_angle, int& knee_angle, bool isLeftSide) {
+const float rear_positions[][3] = {
+    {0, 48.55, 190},       // Position 1, back and grounded
+    {0, 48.55, 170},       // Position 2, back and lifted
+    {-20, 48.55, 170},     // Position 3, front and lifted
+    {-20, 48.55, 190}      // Position 4, front and grounded
+};
+
+const float wide_stance_front[][3] = {
+    {-60, 100, 190},  // Wider stance for front legs when rear moves
+};
+
+const float wide_stance_rear[][3] = {
+    {0, 100, 190},  // Wider stance for rear legs when front moves
+};
+
+void calculateServoAngles(float input_x, float input_y, float input_z, int& shoulder_angle, int& hip_angle, int& knee_angle, bool isLeftSide, bool isFront) {
     // Y-Z Plane IK
     float var_D = sqrt(pow(input_y, 2) + pow(input_z, 2) - pow(Shoulder_to_foot, 2));
     float var_omega = (atan(input_y/input_z) + atan(var_D/Shoulder_to_foot));
-    shoulder_angle = var_omega * 180/PI;
+    
+    // RR is our reference (positive moves outward)
+    if (isFront && isLeftSide)      shoulder_angle = var_omega * 180/PI;      // FL outward
+    else if (isFront && !isLeftSide) shoulder_angle = 180 -var_omega * 180/PI;    // FR inward
+    else if (!isFront && isLeftSide) shoulder_angle = 180 -var_omega * 180/PI;    // RL inward
+    else                            shoulder_angle = var_omega * 180/PI;      // RR outward
 
     // X-Z Plane IK
     float var_G = sqrt(pow(var_D, 2) + pow(input_x, 2));
@@ -132,13 +152,14 @@ void setup() {
     for(int i = 0; i < 4; i++) {
         int shoulder_angle, hip_angle, knee_angle;
         calculateServoAngles(
-            positions[0][0],
-            positions[0][1],
-            positions[0][2],
+            front_positions[0][0],
+            front_positions[0][1],
+            front_positions[0][2],
             shoulder_angle, 
             hip_angle, 
             knee_angle, 
-            legs[i]->isLeft
+            legs[i]->isLeft,
+            legs[i]->isFront
         );
         legs[i]->shoulder.write(shoulder_angle);
         legs[i]->hip.write(hip_angle);
@@ -151,25 +172,30 @@ const int POSITION_DELAY = 500; // Delay between positions in ms
 
 void loop() {
     static int activeleg = 0;  // 0=FL, 1=RR, 2=FR, 3=RL
-
     Leg* currentLeg = legs[activeleg];
     
-    if (currentLeg->currentPosition == 3) {
-        // When leg is in air (pos 3), start moving next leg
-        Leg* nextLeg = legs[(activeleg + 1) % 4];
-        if (nextLeg->currentPosition < 2) {
-            moveLeg(*nextLeg, positions[nextLeg->currentPosition]);
-            nextLeg->currentPosition++;
-            return;
+    // Check if we're in front or rear phase
+    bool isFrontPhase = activeleg <= 1;  // First two legs are front legs
+    
+    // Adjust stance of non-moving legs
+    for(int i = 0; i < 4; i++) {
+        if(i != activeleg) {  // Don't adjust the moving leg
+            if(isFrontPhase && (i == 2 || i == 3)) {  // If front moving, widen rear
+                moveLeg(*legs[i], wide_stance_rear[0]);
+            } else if(!isFrontPhase && (i == 0 || i == 1)) {  // If rear moving, widen front
+                moveLeg(*legs[i], wide_stance_front[0]);
+            }
         }
     }
     
     if (currentLeg->currentPosition == 4) {
-        moveLeg(*currentLeg, positions[0]);  // Ground contact movement (4->1)
+        moveLeg(*currentLeg, currentLeg->isFront ? front_positions[0] : rear_positions[0]);
         currentLeg->currentPosition = 0;
         activeleg = (activeleg + 1) % 4;
     } else if (currentLeg->currentPosition < 4) {
-        moveLeg(*currentLeg, positions[currentLeg->currentPosition]);
+        moveLeg(*currentLeg, currentLeg->isFront ? 
+            front_positions[currentLeg->currentPosition] : 
+            rear_positions[currentLeg->currentPosition]);
         currentLeg->currentPosition++;
     }
     
@@ -179,7 +205,7 @@ void loop() {
 void moveLeg(Leg& leg, float* position) {
     int shoulder_angle, hip_angle, knee_angle;
     calculateServoAngles(position[0], position[1], position[2], 
-                        shoulder_angle, hip_angle, knee_angle, leg.isLeft);
+                        shoulder_angle, hip_angle, knee_angle, leg.isLeft, leg.isFront);
     
     leg.shoulder.write(shoulder_angle);
     leg.hip.write(hip_angle);

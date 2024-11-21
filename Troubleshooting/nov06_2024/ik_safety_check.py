@@ -101,9 +101,9 @@ def check_servo_angles(hip_angle: float, knee_angle: float, shoulder_angle: floa
 # Example usage
 if __name__ == "__main__":
     # Define square parameters
-    start_point = [-60, 48.55, 170]  # Starting corner [X, Y, Z]
-    square_base = 60  # X-axis length
-    square_height = 50  # Z-axis length
+    start_point = [-40, 48.55, 100]  # Starting corner [X, Y, Z]
+    square_base = 20  # X-axis length
+    square_height = 20  # Z-axis length
     side = 'Right'
     
     square_points = [
