@@ -48,7 +48,7 @@ struct Leg {
 };
 
 ServoTrim FL_trim = {0, 0, 0};  
-ServoTrim FR_trim = {0, 10, -10};
+ServoTrim FR_trim = {0, 6, -6};
 ServoTrim RL_trim = {0, 0, 0};
 ServoTrim RR_trim = {-7, 0, 10};
 
@@ -60,10 +60,10 @@ Leg RL = {RLShoulder, RLHip, RLKnee, RL_trim, 0, GROUNDED, true, false};
 Leg* legs[4] = {&FL, &FR, &RL, &RR}; // Front left -> Front right -> Rear left -> Rear right
 
 const float legPositions[4][3] = {
-    {-40, 70, 200},  // FL custom position
-    {-40, 70, 200},  // FR custom position
-    {60, 70, 200},   // RL custom position
-    {60, 70, 200}    // RR custom position
+    {-40, 50, 220},  // FL custom position
+    {-40, 50, 220},  // FR custom position
+    {40, 50, 220},   // RL custom position
+    {40, 50, 220}    // RR custom position
 };
 
 void calculateServoAngles(float input_x, float input_y, float input_z, int& shoulder_angle, int& hip_angle, int& knee_angle, bool isLeftSide, bool isFront) {

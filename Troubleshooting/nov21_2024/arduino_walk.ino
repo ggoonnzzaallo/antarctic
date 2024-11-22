@@ -48,9 +48,9 @@ struct Leg {
 };
 
 ServoTrim FL_trim = {0, 0, 0};  
-ServoTrim FR_trim = {0, 10, -10};
+ServoTrim FR_trim = {0, 6, -6};
 ServoTrim RL_trim = {0, 0, 0};
-ServoTrim RR_trim = {-7, 0, 10};
+ServoTrim RR_trim = {-7, 2, 10};
 
 Leg FL = {FLShoulder, FLHip, FLKnee, FL_trim, 0, GROUNDED, true, true};
 Leg RR = {RRShoulder, RRHip, RRKnee, RR_trim, 0, GROUNDED, false, false};
@@ -60,24 +60,24 @@ Leg RL = {RLShoulder, RLHip, RLKnee, RL_trim, 0, GROUNDED, true, false};
 Leg* legs[4] = {&FL, &FR, &RL, &RR}; // Front left -> Front right -> Rear left -> Rear right
 
 const float legPositions[4][3] = {
-    {-40, 70, 200},  // FL custom position
-    {-40, 70, 200},  // FR custom position
-    {60, 70, 200},   // RL custom position
-    {60, 70, 200}    // RR custom position
+    {-40, 50, 220},  // FL custom position
+    {-40, 50, 220},  // FR custom position
+    {40, 50, 220},   // RL custom position
+    {40, 50, 220}    // RR custom position
 };
 
 const float frontLegSteps[3][3] = {
-    {20, 70, 200},  // Position 1, Ground position
-    {-10, 70, 180}, // Position 2, Lift position
-    {-40, 70, 200}    // Position 3, Forward position
+    {-0, 50, 220},  // Position 1, Ground position
+    {-20, 50, 200}, // Position 2, Lift position
+    {-40, 50, 220}    // Position 3, Forward position
 };
+
 
 const float rearLegSteps[3][3] = {
-    {120, 70, 200},   // Position 1, Ground position
-    {90, 70, 180},  // Position 2, Lift position
-    {60, 70, 200}   // Position 3, Forward position
+    {90, 50, 220},   // Position 1, Ground position
+    {65, 50, 200},  // Position 2, Lift position
+    {40, 50, 220}   // Position 3, Forward position
 };
-
 
 void calculateServoAngles(float input_x, float input_y, float input_z, int& shoulder_angle, int& hip_angle, int& knee_angle, bool isLeftSide, bool isFront) {
     // Y-Z Plane IK
@@ -192,7 +192,7 @@ void loop() {
     moveLeg(*legs[1], frontLegSteps[diag2Step]);  // FR
     moveLeg(*legs[2], rearLegSteps[diag2Step]);   // RL
     
-    delay(1000);
+    delay(500);
     
     // Explicit step transitions
     if (diag1Step == 2) diag1Step = 0;

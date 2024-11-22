@@ -101,8 +101,8 @@ def check_servo_angles(hip_angle: float, knee_angle: float, shoulder_angle: floa
 # Example usage
 if __name__ == "__main__":
     # Define triangle parameters 
-    start_point = [60, 70, 200]  # Starting corner [X, Y, Z] - rear point
-    triangle_base = 60  # X-axis length forward
+    start_point = [-40, 50, 240]  # Starting corner [X, Y, Z] - rear point
+    triangle_base = 40  # X-axis length forward
     triangle_height = 20  # Z-axis height
     side = 'Right'
     
