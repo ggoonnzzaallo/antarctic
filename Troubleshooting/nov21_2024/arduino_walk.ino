@@ -48,9 +48,9 @@ struct Leg {
 };
 
 ServoTrim FL_trim = {0, 0, 0};  
-ServoTrim FR_trim = {0, 6, -6};
+ServoTrim FR_trim = {0, 5, -5}; // n/a, higher means leg extends, lower means leg extends
 ServoTrim RL_trim = {0, 0, 0};
-ServoTrim RR_trim = {-7, 2, 10};
+ServoTrim RR_trim = {-4, -12, 0}; // n/a, higher brings it forward CCW, lower rotates CW
 
 Leg FL = {FLShoulder, FLHip, FLKnee, FL_trim, 0, GROUNDED, true, true};
 Leg RR = {RRShoulder, RRHip, RRKnee, RR_trim, 0, GROUNDED, false, false};
