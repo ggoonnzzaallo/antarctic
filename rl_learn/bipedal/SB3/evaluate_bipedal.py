@@ -3,8 +3,6 @@ import gymnasium as gym
 import argparse
 from stable_baselines3 import PPO, A2C, SAC, TD3
 from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
-from gymnasium.wrappers import RecordVideo
-import datetime
 
 # Dictionary of available algorithms
 ALGORITHMS = {
@@ -14,20 +12,15 @@ ALGORITHMS = {
     "TD3": TD3
 }
 
-def make_env(render_mode=None, record_video=False):
+def make_env(render_mode=None):
     """Create the BipedalWalker environment"""
     env = gym.make("BipedalWalker-v3", render_mode=render_mode)
-    if record_video:
-        # Create a unique video directory with timestamp
-        time_stamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-        video_dir = os.path.join("videos", f"{time_stamp}")
-        env = RecordVideo(env, video_dir, episode_trigger=lambda x: True)
     return env
 
 def evaluate_model(algo_name, model_path, episodes=5):
-    """Evaluate a trained model with rendering and video recording"""
-    # Load the environment with rendering and video recording
-    env = make_env(render_mode="rgb_array", record_video=True)
+    """Evaluate a trained model with rendering"""
+    # Load the environment with rendering
+    env = make_env(render_mode="human")
     env = DummyVecEnv([lambda: env])
     
     # Load the model
