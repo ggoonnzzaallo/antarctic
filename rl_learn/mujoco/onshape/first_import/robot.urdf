@@ -1,0 +1,55 @@
+<?xml version="1.0" ?>
+<robot name="onshape">
+  <link name="propeller">
+    <visual>
+      <origin xyz="-0.011966740677765277945 -0.043881471674857022713 0.076864574960502335399" rpy="3.141592653589793116 -0 0"/>
+      <geometry>
+        <mesh filename="package:///propeller.stl"/>
+      </geometry>
+      <material name="propeller_material">
+        <color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.011966740677765277945 -0.043881471674857022713 0.076864574960502335399" rpy="3.141592653589793116 -0 0"/>
+      <geometry>
+        <mesh filename="package:///propeller.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin xyz="-0.011966740677765274475 -0.041381471674857020493 0.076864574960502335399" rpy="0 0 0"/>
+      <mass value="0.010162015843501237544"/>
+      <inertia ixx="7.4000226925147951031e-07" ixy="0" ixz="0" iyy="8.0231069335487203842e-07" iyz="0" izz="1.0465015678464768441e-07"/>
+    </inertial>
+  </link>
+  <link name="base">
+    <visual>
+      <origin xyz="0 -0.080000000000000001665 -0.025000000000000001388" rpy="-1.570796326794896558 -0 0"/>
+      <geometry>
+        <mesh filename="package:///base.stl"/>
+      </geometry>
+      <material name="base_material">
+        <color rgba="0.61568627450980395466 0.81176470588235294379 0.92941176470588238168 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 -0.080000000000000001665 -0.025000000000000001388" rpy="-1.570796326794896558 -0 0"/>
+      <geometry>
+        <mesh filename="package:///base.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin xyz="1.7604172166213787453e-18 -0.030237484649091546374 -0.025098951937121482397" rpy="0 0 0"/>
+      <mass value="1.9470865610433258919"/>
+      <inertia ixx="0.0020269623926380841462" ixy="0" ixz="0" iyy="0.00081438180135334965228" iyz="5.8257952980271540482e-06" izz="0.0020300962566311099231"/>
+    </inertial>
+  </link>
+  <joint name="leg1_a" type="revolute">
+    <origin xyz="-0.011966740677765277945 -0.038881471674857025211 0.076864574960502335399" rpy="1.570796326794896558 -0 0"/>
+    <parent link="propeller"/>
+    <child link="base"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="1" velocity="20"/>
+    <joint_properties friction="0.0"/>
+  </joint>
+</robot>
