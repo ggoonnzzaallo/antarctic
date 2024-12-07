@@ -1,0 +1,10 @@
+{
+  "features": [],
+  "featureStates": [],
+  "isComplete": true,
+  "serializationVersion": "1.2.0",
+  "sourceMicroversion": "079b85e541d527dd08d62f64",
+  "rejectMicroversionSkew": false,
+  "microversionSkew": false,
+  "libraryVersion": 0
+}
