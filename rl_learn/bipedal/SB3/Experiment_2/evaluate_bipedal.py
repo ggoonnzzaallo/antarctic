@@ -3,6 +3,8 @@ import gymnasium as gym
 import argparse
 from stable_baselines3 import PPO, A2C, SAC, TD3
 from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
+from gymnasium import ObservationWrapper
+import numpy as np
 
 # Dictionary of available algorithms
 ALGORITHMS = {
@@ -12,9 +14,22 @@ ALGORITHMS = {
     "TD3": TD3
 }
 
+class CustomObservationWrapper(ObservationWrapper):
+    def __init__(self, env, indices_to_keep):
+        super().__init__(env)
+        self.indices_to_keep = indices_to_keep
+        # Update the observation space to reflect the new size
+        low = self.observation_space.low[indices_to_keep]
+        high = self.observation_space.high[indices_to_keep]
+        self.observation_space = gym.spaces.Box(low=low, high=high)
+
+    def observation(self, obs):
+        return obs[self.indices_to_keep]
+
 def make_env(render_mode=None):
     """Create the BipedalWalker environment"""
     env = gym.make("BipedalWalker-v3", render_mode=render_mode)
+    env = CustomObservationWrapper(env, indices_to_keep=np.array([0,1,2,3,4,6,9,11]))
     return env
 
 def evaluate_model(algo_name, model_path, episodes=5):
