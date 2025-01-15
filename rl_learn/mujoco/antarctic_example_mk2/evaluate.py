@@ -1,9 +1,20 @@
+'''
+This script is used to evaluate the model.
+
+To run this you must specify the algorithm and model path at a minimum. You can also specify other parameters like eval-episodes, learning-rate, batch-size, n-steps, gamma, etc.
+
+For example, you can run:
+python evaluate.py --algo PPO --model-path models/PPO/best_model/best_model
+'''
+
+
 import os
 import gymnasium as gym
 import argparse
 from stable_baselines3 import PPO, A2C, SAC, TD3
 from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
 import numpy as np
+from custom_ant import ForwardFacingAntEnv
 
 # Dictionary of available algorithms
 ALGORITHMS = {
@@ -14,24 +25,20 @@ ALGORITHMS = {
 }
 
 def make_env(render_mode=None):
-    """Create the Ant environment"""
-    env = gym.make(
-        'Ant-v5',
+    """Create the forward-facing Ant environment"""
+    env = ForwardFacingAntEnv(
         xml_file='./scene.xml',
         forward_reward_weight=1,
         ctrl_cost_weight=0.05,
         contact_cost_weight=5e-4,
         healthy_reward=1,
         main_body=1,
-        healthy_z_range=(0, 1),
+        healthy_z_range=(0, 0.75),
         include_cfrc_ext_in_observation=True,
         exclude_current_positions_from_observation=False,
         reset_noise_scale=0.1,
         frame_skip=25,
-        max_episode_steps=1000,
-        render_mode=render_mode,
-        camera_id=0,  # Use the main tracking camera
-        terminate_when_unhealthy=False,
+        render_mode=render_mode
     )
     return env
 
@@ -41,9 +48,17 @@ def evaluate_model(algo_name, model_path, episodes=5):
     env = make_env(render_mode="human")
     env = DummyVecEnv([lambda: env])
     
+    # Load the stats from training
+    stats_path = os.path.join(os.path.dirname(model_path), "vec_normalize.pkl")
+    if os.path.exists(stats_path):
+        env = VecNormalize.load(stats_path, env)
+        # Don't update the normalizer during evaluation
+        env.training = False
+        env.norm_reward = False
+    
     # Load the model
     try:
-        model = ALGORITHMS[algo_name].load(model_path)
+        model = ALGORITHMS[algo_name].load(model_path, env=env)  # Pass env to ensure compatibility
     except FileNotFoundError:
         print(f"\nERROR: Could not find model at {model_path}")
         return

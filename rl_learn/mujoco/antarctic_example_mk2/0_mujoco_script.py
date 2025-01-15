@@ -15,7 +15,7 @@ data = mujoco.MjData(model)
 mujoco.mj_resetData(model, data)
 
 # Set initial positions for the root (free joint)
-data.qpos[0:3] = [0, 0, 0.1]  # x, y, z position (z = 0.1 meters = 10 cm)
+data.qpos[0:3] = [0, 0, 0.185]  # x, y, z position (z = 0.1 meters = 10 cm)
 data.qpos[3:7] = [1, 0, 0, 0]  # quaternion orientation (w, x, y, z)
 
 # Set initial positions for other joints
@@ -35,7 +35,7 @@ joint_names = [
 ]
 
 # Set desired positions for each joint
-joint_positions = [1.57, 0.0, 0.0, 1.57, 0.0, 3.14, -1.57, 1.57, 3.14, 1.57, 0.0, 0.0]
+joint_positions = [1.57, 0.0, 0.85, 1.57, 0.0, 2.29, 1.57, 1.57, 2.29, 1.57, 0.0, 0.85]
 
 # Set each joint position
 for name, pos in zip(joint_names, joint_positions):
@@ -66,30 +66,30 @@ print(f"Joint frictionloss: {model.dof_frictionloss[model.jnt_dofadr[joint_id]]}
 # data.ctrl[actuator_id] = initial_pos
 
 with mujoco.viewer.launch_passive(model, data) as viewer:
-    start_time = time.time()
+    # start_time = time.time()
     
     while viewer.is_running():
-        # Get the control signal limits (now represents torque limits)
-        ctrl_range = model.actuator_ctrlrange[actuator_id]
-        print(f"\nTorque range: [{ctrl_range[0]:.3f}, {ctrl_range[1]:.3f}]")
+        # # Get the control signal limits (now represents torque limits)
+        # ctrl_range = model.actuator_ctrlrange[actuator_id]
+        # print(f"\nTorque range: [{ctrl_range[0]:.3f}, {ctrl_range[1]:.3f}]")
         
-        # Apply torque command (example: sinusoidal torque)
-        time_now = time.time() - start_time
-        desired_torque = 50 * np.sin(time_now)  # Oscillate between -50 and 50 N⋅m
-        data.ctrl[actuator_id] = desired_torque
+        # # # Apply torque command (example: sinusoidal torque)
+        # # time_now = time.time() - start_time
+        # # desired_torque = 50 * np.sin(time_now)  # Oscillate between -50 and 50 N⋅m
+        # # data.ctrl[actuator_id] = desired_torque
         
-        # Step the simulation
-        mujoco.mj_step(model, data)
+        # # Step the simulation
+        # mujoco.mj_step(model, data)
         
-        # Get actual state
-        actual_position = data.qpos[model.jnt_qposadr[joint_id]]
-        actual_velocity = data.qvel[model.jnt_dofadr[joint_id]]
-        applied_torque = data.actuator_force[actuator_id]
+        # # Get actual state
+        # actual_position = data.qpos[model.jnt_qposadr[joint_id]]
+        # actual_velocity = data.qvel[model.jnt_dofadr[joint_id]]
+        # applied_torque = data.actuator_force[actuator_id]
         
-        print(f"Applied torque: {desired_torque:.3f}")
-        print(f"Actual pos: {actual_position:.3f}")
-        print(f"Velocity: {actual_velocity:.3f}")
-        print(f"Measured torque: {applied_torque:.3f}")
+        # # print(f"Applied torque: {desired_torque:.3f}")
+        # print(f"Actual pos: {actual_position:.3f}")
+        # print(f"Velocity: {actual_velocity:.3f}")
+        # print(f"Measured torque: {applied_torque:.3f}")
         
         viewer.sync()
         time.sleep(0.01)

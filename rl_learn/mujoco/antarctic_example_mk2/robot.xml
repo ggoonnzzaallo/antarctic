@@ -4,7 +4,7 @@
   <compiler angle="radian" meshdir="meshes" eulerseq="zyx" autolimits="true" />
 
   <default>
-    <joint limited="true" damping="0.01" armature="0.01" frictionloss="0.01" />
+    <joint limited="true" damping="5.0" armature="1.0" frictionloss="0.01" />
     <geom condim="4" contype="1" conaffinity="15" friction="0.9 0.2 0.2" solref="0.001 2" />
     <motor ctrllimited="true" />
     <equality solref="0.001 2" />
@@ -52,7 +52,7 @@
           <geom type="mesh" rgba="0.615686 0.811765 0.929412 1" mesh="Hip_Horn" />
           <body name="LEFT_Lower_Leg" pos="0.0919239 0.0919239 -0.0132" quat="8.88021e-09 -0.382683 0.92388 -2.14387e-08">
             <inertial pos="0.0521679 0.0503249 -0.00061848" quat="-0.26416 0.623178 0.267705 0.685713" mass="0.0455909" diaginertia="0.000128574 0.000127512 2.91333e-06" />
-            <joint name="dof_knee_front_left" pos="0 0 0" axis="0 0 1" range="0 1.91986" actuatorfrcrange="-80 80" />
+            <joint name="dof_knee_front_left" pos="0 0 0" axis="0 0 1" range="0 3.14159" actuatorfrcrange="-80 80" />
             <geom type="mesh" rgba="0.372549 0.654902 0.239216 1" mesh="LEFT_Lower_Leg" contype="1" conaffinity="0" density="0" group="1" class="visualgeom" />
             <geom type="mesh" rgba="0.372549 0.654902 0.239216 1" mesh="LEFT_Lower_Leg" />
           </body>
@@ -70,7 +70,7 @@
           <geom type="mesh" rgba="0.615686 0.811765 0.929412 1" mesh="Hip_Horn_2" />
           <body name="RIGHT_Lower_Leg" pos="-0.0919239 -0.0919239 -0.0132" quat="8.88021e-09 -0.382683 0.92388 -2.14387e-08">
             <inertial pos="0.0521679 -0.0503249 -0.000618479" quat="0.26416 0.623178 -0.267705 0.685713" mass="0.0455909" diaginertia="0.000128574 0.000127512 2.91333e-06" />
-            <joint name="dof_knee_front_right" pos="0 0 0" axis="0 0 1" range="1.22173 3.14159" actuatorfrcrange="-80 80" />
+            <joint name="dof_knee_front_right" pos="0 0 0" axis="0 0 1" range="0 3.14159" actuatorfrcrange="-80 80" />
             <geom type="mesh" rgba="0.372549 0.654902 0.239216 1" mesh="RIGHT_Lower_Leg" contype="1" conaffinity="0" density="0" group="1" class="visualgeom" />
             <geom type="mesh" rgba="0.372549 0.654902 0.239216 1" mesh="RIGHT_Lower_Leg" />
           </body>
@@ -88,7 +88,7 @@
           <geom type="mesh" rgba="0.615686 0.811765 0.929412 1" mesh="Hip_Horn_3" />
           <body name="RIGHT_Lower_Leg_2" pos="0.0919239 0.0919239 -0.0132" quat="2.14387e-08 -0.92388 -0.382683 8.88021e-09">
             <inertial pos="0.0521679 -0.0503249 -0.000618479" quat="0.26416 0.623178 -0.267705 0.685713" mass="0.0455909" diaginertia="0.000128574 0.000127512 2.91333e-06" />
-            <joint name="dof_knee_rear_right" pos="0 0 0" axis="0 0 1" range="1.22173 3.14159" actuatorfrcrange="-80 80" />
+            <joint name="dof_knee_rear_right" pos="0 0 0" axis="0 0 1" range="0 3.14159" actuatorfrcrange="-80 80" />
             <geom type="mesh" rgba="0.372549 0.654902 0.239216 1" mesh="RIGHT_Lower_Leg_2" contype="1" conaffinity="0" density="0" group="1" class="visualgeom" />
             <geom type="mesh" rgba="0.372549 0.654902 0.239216 1" mesh="RIGHT_Lower_Leg_2" />
           </body>
@@ -106,7 +106,7 @@
           <geom type="mesh" rgba="0.615686 0.811765 0.929412 1" mesh="Hip_Horn_4" />
           <body name="LEFT_Lower_Leg_2" pos="0.0919239 -0.0919239 -0.0132" quat="8.88021e-09 -0.382683 -0.92388 2.14387e-08">
             <inertial pos="0.0521679 0.0503249 -0.00061848" quat="-0.26416 0.623178 0.267705 0.685713" mass="0.0455909" diaginertia="0.000128574 0.000127512 2.91333e-06" />
-            <joint name="dof_knee_rear_left" pos="0 0 0" axis="0 0 1" range="0 1.91986" actuatorfrcrange="-80 80" />
+            <joint name="dof_knee_rear_left" pos="0 0 0" axis="0 0 1" range="0 3.14159" actuatorfrcrange="-80 80" />
             <geom type="mesh" rgba="0.372549 0.654902 0.239216 1" mesh="LEFT_Lower_Leg_2" contype="1" conaffinity="0" density="0" group="1" class="visualgeom" />
             <geom type="mesh" rgba="0.372549 0.654902 0.239216 1" mesh="LEFT_Lower_Leg_2" />
           </body>
@@ -116,49 +116,21 @@
   </worldbody>
 
   <actuator>
-    <position name="dof_shoulder_front_left" joint="dof_shoulder_front_left" kp="100" ctrlrange="0 3.14159" />
-    <position name="dof_hip_front_left" joint="dof_hip_front_left" kp="100" ctrlrange="0 3.14159" />
-    <position name="dof_knee_front_left" joint="dof_knee_front_left" kp="100" ctrlrange="0 1.91986" />
-    <position name="dof_shoulder_front_right" joint="dof_shoulder_front_right" kp="100" ctrlrange="0 3.14159" />
-    <position name="dof_hip_front_right" joint="dof_hip_front_right" kp="100" ctrlrange="0 3.14159" />
-    <position name="dof_knee_front_right" joint="dof_knee_front_right" kp="100" ctrlrange="1.22173 3.14159" />
-    <position name="dof_shoulder_rear_right" joint="dof_shoulder_rear_right" kp="100" ctrlrange="0 3.14159" />
-    <position name="dof_hip_rear_right" joint="dof_hip_rear_right" kp="100" ctrlrange="0 3.14159" />
-    <position name="dof_knee_rear_right" joint="dof_knee_rear_right" kp="100" ctrlrange="1.22173 3.14159" />
-    <position name="dof_shoulder_rear_left" joint="dof_shoulder_rear_left" kp="100" ctrlrange="0 3.14159" />
-    <position name="dof_hip_rear_left" joint="dof_hip_rear_left" kp="100" ctrlrange="0 3.14159" />
-    <position name="dof_knee_rear_left" joint="dof_knee_rear_left" kp="100" ctrlrange="0 1.91986" />
+    <position name="dof_shoulder_front_left" joint="dof_shoulder_front_left" kp="50" ctrlrange="0 3.14159" />
+    <position name="dof_hip_front_left" joint="dof_hip_front_left" kp="50" ctrlrange="0 3.14159" />
+    <position name="dof_knee_front_left" joint="dof_knee_front_left" kp="50" ctrlrange="0 3.14159" />
+    <position name="dof_shoulder_front_right" joint="dof_shoulder_front_right" kp="50" ctrlrange="0 3.14159" />
+    <position name="dof_hip_front_right" joint="dof_hip_front_right" kp="50" ctrlrange="0 3.14159" />
+    <position name="dof_knee_front_right" joint="dof_knee_front_right" kp="50" ctrlrange="0 3.14159" />
+    <position name="dof_shoulder_rear_right" joint="dof_shoulder_rear_right" kp="50" ctrlrange="0 3.14159" />
+    <position name="dof_hip_rear_right" joint="dof_hip_rear_right" kp="50" ctrlrange="0 3.14159" />
+    <position name="dof_knee_rear_right" joint="dof_knee_rear_right" kp="50" ctrlrange="0 3.14159" />
+    <position name="dof_shoulder_rear_left" joint="dof_shoulder_rear_left" kp="50" ctrlrange="0 3.14159" />
+    <position name="dof_hip_rear_left" joint="dof_hip_rear_left" kp="50" ctrlrange="0 3.14159" />
+    <position name="dof_knee_rear_left" joint="dof_knee_rear_left" kp="50" ctrlrange="0 3.14159" />
   </actuator>
 
   <sensor>
-    <!-- Joint Position Sensors -->
-    <jointpos name="shoulder_front_left" joint="dof_shoulder_front_left" />
-    <jointpos name="hip_front_left" joint="dof_hip_front_left" />
-    <jointpos name="knee_front_left" joint="dof_knee_front_left" />
-    <jointpos name="shoulder_front_right" joint="dof_shoulder_front_right" />
-    <jointpos name="hip_front_right" joint="dof_hip_front_right" />
-    <jointpos name="knee_front_right" joint="dof_knee_front_right" />
-    <jointpos name="shoulder_rear_right" joint="dof_shoulder_rear_right" />
-    <jointpos name="hip_rear_right" joint="dof_hip_rear_right" />
-    <jointpos name="knee_rear_right" joint="dof_knee_rear_right" />
-    <jointpos name="shoulder_rear_left" joint="dof_shoulder_rear_left" />
-    <jointpos name="hip_rear_left" joint="dof_hip_rear_left" />
-    <jointpos name="knee_rear_left" joint="dof_knee_rear_left" />
-
-    <!-- Joint Velocity Sensors -->
-    <jointvel name="shoulder_front_left_vel" joint="dof_shoulder_front_left" />
-    <jointvel name="hip_front_left_vel" joint="dof_hip_front_left" />
-    <jointvel name="knee_front_left_vel" joint="dof_knee_front_left" />
-    <jointvel name="shoulder_front_right_vel" joint="dof_shoulder_front_right" />
-    <jointvel name="hip_front_right_vel" joint="dof_hip_front_right" />
-    <jointvel name="knee_front_right_vel" joint="dof_knee_front_right" />
-    <jointvel name="shoulder_rear_right_vel" joint="dof_shoulder_rear_right" />
-    <jointvel name="hip_rear_right_vel" joint="dof_hip_rear_right" />
-    <jointvel name="knee_rear_right_vel" joint="dof_knee_rear_right" />
-    <jointvel name="shoulder_rear_left_vel" joint="dof_shoulder_rear_left" />
-    <jointvel name="hip_rear_left_vel" joint="dof_hip_rear_left" />
-    <jointvel name="knee_rear_left_vel" joint="dof_knee_rear_left" />
-
     <!-- IMU Sensors (if you need orientation/angular velocity) -->
     <framequat name="orientation" objtype="site" objname="imu" />
     <gyro name="angular-velocity" site="imu" />

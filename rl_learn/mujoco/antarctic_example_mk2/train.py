@@ -9,7 +9,7 @@ For example, you can run:
 python train.py --algo PPO --timesteps 1000000
 '''
 
-import gymnasium
+import gymnasium as gym
 import numpy as np
 import os
 import argparse
@@ -94,6 +94,19 @@ def make_env(render_mode="human"):
     print("Observation Space:", env.observation_space.shape)
     return env
 
+
+# def make_env(render_mode="human"):
+#     """Create the default Ant-v5 environment"""
+#     env = gym.make(
+#         'Ant-v5',
+#         render_mode=render_mode,
+#         terminate_when_unhealthy=True,  # Default Ant-v5 setting
+#         healthy_z_range=(0.2, 1.0),     # Default Ant-v5 setting
+#     )
+#     print("Observation Space:", env.observation_space.shape)
+#     return env
+
+
 def train_model(algo_name="PPO", total_timesteps=1_000_000):
     """Train a model using the specified algorithm"""
     # Create logs directory
@@ -117,7 +130,7 @@ def train_model(algo_name="PPO", total_timesteps=1_000_000):
 
     # Callback setup
     checkpoint_callback = CheckpointCallback(
-        save_freq=1000, #used to be 10000
+        save_freq=10000, #used to be 10000
         save_path=models_dir,
         name_prefix="model",
         save_replay_buffer=True,
@@ -128,7 +141,7 @@ def train_model(algo_name="PPO", total_timesteps=1_000_000):
         eval_env=eval_env,
         best_model_save_path=best_model_dir,
         log_path=log_dir,
-        eval_freq=1000, #used to be 10000
+        eval_freq=10000, #used to be 10000
         deterministic=True,
         render=False,
         n_eval_episodes=5
