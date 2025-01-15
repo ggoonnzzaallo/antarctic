@@ -1,0 +1,101 @@
+{
+  "jsonType": "metadata-element",
+  "elementType": 1,
+  "mimeType": "onshape/assembly",
+  "elementId": "25d09c01a17054f603c26cf8",
+  "properties": [
+    {
+      "name": "Name",
+      "value": "URDF Robot"
+    },
+    {
+      "name": "Description",
+      "value": null
+    },
+    {
+      "name": "Category",
+      "value": [
+        {
+          "memberCategories": null,
+          "memberCategoryIds": null,
+          "defaultObjectType": 3,
+          "objectTypes": [
+            3
+          ],
+          "description": "Category created by upgrade",
+          "ownerType": 2,
+          "ownerId": "556f3109e4b00b3fee9a3f4a",
+          "publishState": 1,
+          "name": "Onshape Assembly",
+          "id": "5877a03ebe4c21163b49dce3",
+          "href": null
+        }
+      ]
+    },
+    {
+      "name": "Part number",
+      "value": null
+    },
+    {
+      "name": "Revision",
+      "value": null
+    },
+    {
+      "name": "State",
+      "value": "0"
+    },
+    {
+      "name": "Vendor",
+      "value": null
+    },
+    {
+      "name": "Project",
+      "value": null
+    },
+    {
+      "name": "Product line",
+      "value": null
+    },
+    {
+      "name": "Title 1",
+      "value": null
+    },
+    {
+      "name": "Title 2",
+      "value": null
+    },
+    {
+      "name": "Title 3",
+      "value": null
+    },
+    {
+      "name": "Not revision managed",
+      "value": false
+    },
+    {
+      "name": "Exclude from all BOMs",
+      "value": false
+    },
+    {
+      "name": "Unit of measure",
+      "value": "Each"
+    },
+    {
+      "name": "Mass",
+      "value": null
+    },
+    {
+      "name": "Center of mass",
+      "value": null
+    },
+    {
+      "name": "Inertia",
+      "value": null
+    },
+    {
+      "name": "Subassembly BOM behavior",
+      "value": "0"
+    }
+  ],
+  "href": "https://cad.onshape.com/api/metadata/d/5140fd03e9dd2ce57a6fa1d7/m/f54b79a1d6824672c2864fd0/e/25d09c01a17054f603c26cf8?configuration=default"
+}

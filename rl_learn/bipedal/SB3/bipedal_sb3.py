@@ -5,6 +5,10 @@ from stable_baselines3 import PPO, A2C, SAC, TD3
 from stable_baselines3.common.callbacks import EvalCallback, CheckpointCallback, BaseCallback
 from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
+import subprocess
+import webbrowser
+import time
+from threading import Thread
 
 # Dictionary of available algorithms
 ALGORITHMS = {
@@ -67,11 +71,29 @@ def get_algorithm_params(algo_name):
         }
     return {}
 
+def launch_tensorboard(log_dir):
+    """Launch Tensorboard in a separate thread"""
+    def run_tensorboard():
+        subprocess.run(['tensorboard', '--logdir', log_dir, '--port', '6006'])
+
+    # Start Tensorboard in a separate thread
+    tensorboard_thread = Thread(target=run_tensorboard, daemon=True)
+    tensorboard_thread.start()
+    
+    # Wait a moment for Tensorboard to start
+    time.sleep(3)
+    
+    # Open the default web browser
+    webbrowser.open('http://localhost:6006')
+
 def train_model(algo_name="PPO", total_timesteps=1_000_000):
     """Train a model using the specified algorithm"""
     # Create logs directory
     log_dir = f"logs/{algo_name}"
     os.makedirs(log_dir, exist_ok=True)
+    
+    # Launch Tensorboard
+    launch_tensorboard(log_dir)
     
     # Create model directory
     models_dir = f"models/{algo_name}"

@@ -1,3 +1,8 @@
+'''
+Example code on how to open the bipedal walker environment in gymnasium.
+'''
+
+
 import gymnasium
 
 env = gymnasium.make("BipedalWalker-v3", render_mode="human")

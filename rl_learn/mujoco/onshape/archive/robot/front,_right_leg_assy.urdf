@@ -1,0 +1,211 @@
+<?xml version="1.0" ?>
+<robot name="front,_right_leg_assy">
+  <link name="base">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <mass value="0.001"/>
+      <inertia ixx="0.000001" ixy="0" ixz="0" iyy="0.000001" iyz="0" izz="0.000001"/>
+    </inertial>
+  </link>
+  <joint name="floating_base" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="base"/>
+    <child link="CLS6336_Servo"/>
+  </joint>
+  <link name="CLS6336_Servo">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/CLS6336_Servo.stl"/>
+      </geometry>
+      <material name="CLS6336_Servo_material">
+        <color rgba="0.79607843 0.82352941 0.9372549 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/CLS6336_Servo.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.553076941"/>
+      <inertia ixx="0.00023240874079133314" iyy="0.0001719501856006602" izz="0.00021389105564056506" ixy="2.6117988070116723e-06" ixz="5.962666479267228e-07" iyz="-9.939585637284283e-07"/>
+      <origin xyz="0.0011856144539308517 -0.014462700318043652 3.7737942557663173e-06" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <joint name="Revolute_3" type="revolute">
+    <origin xyz="0.025309373 0.0010908085 0.009862222" rpy="-1.5707963 0 1.6138687"/>
+    <parent link="CLS6336_Servo"/>
+    <child link="Hip_Horn"/>
+    <limit effort="80" velocity="5" lower="0" upper="0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+  <link name="Hip_Horn">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Hip_Horn.stl"/>
+      </geometry>
+      <material name="Hip_Horn_material">
+        <color rgba="0.61568627 0.81176471 0.92941176 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Hip_Horn.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.0511314554"/>
+      <inertia ixx="5.2939233203605856e-05" iyy="5.2939233858889525e-05" izz="0.00010232304335895765" ixy="-4.8218811229478833e-05" ixz="-3.194421707966363e-06" iyz="-3.1944216862605973e-06"/>
+      <origin xyz="-0.03494724429132352 -0.03494724405386061 -0.014066303948382371" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <joint name="Revolute_4" type="revolute">
+    <origin xyz="0 0 -0.00315" rpy="0 0 1.5707963"/>
+    <parent link="Hip_Horn"/>
+    <child link="RHS,_Servo_Cam"/>
+    <limit effort="80" velocity="5" lower="0" upper="6.2831853"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+  <link name="RHS,_Servo_Cam">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/RHS,_Servo_Cam.stl"/>
+      </geometry>
+      <material name="RHS,_Servo_Cam_material">
+        <color rgba="0.90980392 0.57254902 0.16470588 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/RHS,_Servo_Cam.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.021478198"/>
+      <inertia ixx="5.3641725e-06" iyy="7.7545428e-06" izz="1.289077e-05" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="-0.0018197921 -0.019147273 -0.0015295015" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <joint name="Revolute_1" type="revolute">
+    <origin xyz="0.02655808391637864 -0.02788229575362625 -0.010137777866300712" rpy="3.0985203732051025 1.5707962488400793 0.0"/>
+    <parent link="CLS6336_Servo"/>
+    <child link="Knee_Horn"/>
+    <limit effort="80" velocity="5" lower="0.52359878" upper="2.443461"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+  <link name="Knee_Horn">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Knee_Horn.stl"/>
+      </geometry>
+      <material name="Knee_Horn_material">
+        <color rgba="0.61568627 0.81176471 0.92941176 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Knee_Horn.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.0038598669"/>
+      <inertia ixx="1e-06" iyy="1e-06" izz="1e-06" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0 -0.010385503 -0.0011193915" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <joint name="Revolute_5" type="revolute">
+    <origin xyz="-0.09192388186655782 -0.09192388124194455 -0.0132" rpy="-3.1415926071795863 0.0 0.7853981600000002"/>
+    <parent link="Hip_Horn"/>
+    <child link="(RIGHT_Lower_Leg_simple)-(Boss-Extrude3)"/>
+    <limit effort="80" velocity="5" lower="0" upper="0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+  <link name="(RIGHT_Lower_Leg_simple)-(Boss-Extrude3)">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/(RIGHT_Lower_Leg_simple)-(Boss-Extrude3).stl"/>
+      </geometry>
+      <material name="(RIGHT_Lower_Leg_simple)-(Boss-Extrude3)_material">
+        <color rgba="0.37254902 0.65490196 0.23921569 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/(RIGHT_Lower_Leg_simple)-(Boss-Extrude3).stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.057644496"/>
+      <inertia ixx="7.9749588e-05" iyy="8.3357435e-05" izz="0.00015610457" ixy="7.560864e-05" ixz="-2.7077089e-06" iyz="2.5131393e-06"/>
+      <origin xyz="0.044912722 -0.043111703 0.0021896074" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <joint name="Revolute_2" type="revolute">
+    <origin xyz="0 -0.035 -0.00705" rpy="0 0 3.1415927"/>
+    <parent link="Knee_Horn"/>
+    <child link="Push_Rod,_Cam"/>
+    <limit effort="80" velocity="5" lower="0" upper="6.2831853"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+  <link name="Push_Rod,_Cam">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Push_Rod,_Cam.stl"/>
+      </geometry>
+      <material name="Push_Rod,_Cam_material">
+        <color rgba="0.65490196 0.82352941 0.57647059 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Push_Rod,_Cam.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.0020462267"/>
+      <inertia ixx="1e-06" iyy="1e-06" izz="1e-06" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0.018824313 0 -0.0018273505" rpy="0 0 0"/>
+    </inertial>
+  </link>
+  <joint name="Revolute_6" type="revolute">
+    <origin xyz="-0.028281548 0.023856949 -0.00405" rpy="3.1415927 0 0"/>
+    <parent link="(RIGHT_Lower_Leg_simple)-(Boss-Extrude3)"/>
+    <child link="Push_Rod,_Upper"/>
+    <limit effort="80" velocity="5" lower="0" upper="0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+  <link name="Push_Rod,_Upper">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Push_Rod,_Upper.stl"/>
+      </geometry>
+      <material name="Push_Rod,_Upper_material">
+        <color rgba="0.28235294 0.54901961 0.16078431 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="meshes/Push_Rod,_Upper.stl"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.0067775517"/>
+      <inertia ixx="1e-06" iyy="1.0082202e-05" izz="1.0123273e-05" ixy="0" ixz="0" iyz="0"/>
+      <origin xyz="0.065140538 0 -0.0020636008" rpy="0 0 0"/>
+    </inertial>
+  </link>
+</robot>

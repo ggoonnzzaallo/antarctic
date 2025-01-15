@@ -1,3 +1,7 @@
+'''
+Example code on how to open a custom model in gymnasium.
+'''
+
 import gymnasium as gym
 from gymnasium.envs.mujoco.mujoco_env import MujocoEnv
 import os
@@ -12,7 +16,7 @@ class SimpleRobotEnv(MujocoEnv):
 
     def __init__(self, **kwargs):
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        xml_file = os.path.join(current_dir, "first_import/robot/robot.mjcf")
+        xml_file = os.path.join(current_dir, "robot/robot.mjcf")
         
         # Define observation space before calling super().__init__
         observation_space = spaces.Box(
