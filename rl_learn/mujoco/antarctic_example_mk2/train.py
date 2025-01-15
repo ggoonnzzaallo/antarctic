@@ -17,6 +17,7 @@ from stable_baselines3 import PPO, A2C, SAC, TD3
 from stable_baselines3.common.callbacks import EvalCallback, CheckpointCallback, CallbackList
 from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.vec_env import DummyVecEnv
+from custom_ant import ForwardFacingAntEnv
 
 # Dictionary of available algorithms
 ALGORITHMS = {
@@ -74,10 +75,9 @@ def get_algorithm_params(algo_name):
         }
     return {}
     
-def make_env(render_mode=None):
-    """Create the Ant environment"""
-    env = gymnasium.make(
-        'Ant-v5',
+def make_env(render_mode="human"):
+    """Create the forward-facing Ant environment"""
+    env = ForwardFacingAntEnv(
         xml_file='./scene.xml',
         forward_reward_weight=1,
         ctrl_cost_weight=0.05,
@@ -89,9 +89,9 @@ def make_env(render_mode=None):
         exclude_current_positions_from_observation=False,
         reset_noise_scale=0.1,
         frame_skip=25,
-        max_episode_steps=1000,
         render_mode=render_mode
     )
+    print("Observation Space:", env.observation_space.shape)
     return env
 
 def train_model(algo_name="PPO", total_timesteps=1_000_000):

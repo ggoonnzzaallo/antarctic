@@ -21,17 +21,17 @@ data.qpos[3:7] = [1, 0, 0, 0]  # quaternion orientation (w, x, y, z)
 # Set initial positions for other joints
 joint_names = [
     "dof_shoulder_front_left",
-    "Revolute_1",
-    "Revolute_5",
+    "dof_hip_front_left",
+    "dof_knee_front_left",
     "dof_shoulder_front_right",
-    "Revolute_3",
-    "Revolute_5_2",
+    "dof_hip_front_right",
+    "dof_knee_front_right",
     "dof_shoulder_rear_right",
-    "dof_servo_hip",
-    "dof_knee",
+    "dof_hip_rear_right",
+    "dof_knee_rear_right",
     "dof_shoulder_rear_left",
-    "Revolute_3_2",
-    "Revolute_7"
+    "dof_hip_rear_left",
+    "dof_knee_rear_left"
 ]
 
 # Set desired positions for each joint
